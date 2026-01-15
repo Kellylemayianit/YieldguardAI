@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YieldGuard AI - Exit Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* ========================================
+           LIQUIDITY & ARBITRAGE MANAGER (Panic Utility)
+           exit-styles.css
+           ======================================== */
+
+        .neon-border {
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+        }
+
+        .timer-display {
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Side-by-Side Comparison Layout */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .comparison-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .comparison-card:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+        }
+
+        .comparison-card-left {
+            border-left: 4px solid rgb(34, 197, 94);
+        }
+
+        .comparison-card-right {
+            border-left: 4px solid rgb(234, 179, 8);
+        }
+
+        /* Status Box Styles */
+        .status-box {
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .status-box-safe {
+            background-color: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .status-box-warning {
+            background-color: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .status-box-critical {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-box-blue {
+            background-color: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* List Styles */
+        .status-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .status-list li {
+            padding: 0.25rem 0;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Liquidity Badge */
+        .liquidity-badge {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .liquidity-metric {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+        }
+
+        @media (max-width: 768px) {
+            .liquidity-metric {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scenario Table */
+        .scenario-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .scenario-table th {
+            background-color: rgba(30, 41, 59, 1);
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #334155;
+        }
+
+        .scenario-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #334155;
+            font-size: 0.875rem;
+        }
+
+        .scenario-table tr:hover {
+            background-color: rgba(30, 41, 59, 0.5);
+        }
+
+        .scenario-table-mono {
+            font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+            text-align: right;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: rgb(34, 197, 94);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: rgba(34, 197, 94, 0.25);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid #475569;
+            color: #cbd5e1;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            border-color: #64748b;
+            background-color: rgba(100, 116, 139, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-white">
+    <!-- Header -->
+    <nav class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="dashboard.html" class="text-slate-400 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </a>
+                <div>
+                    <h1 class="text-xl font-bold">De-Peg Arbitrage Dashboard</h1>
+                    <p class="text-xs text-slate-500">Exit Optimizer for Synthetic Dollars</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-sm text-slate-400">Live Data</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Input Section -->
+        <section class="mb-12">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-8">
+                <h2 class="text-lg font-semibold mb-6">Exit Calculator</h2>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Asset Type Selector -->
+                    <div>
+                        <label class="block text-sm font-medium mb-3 text-slate-300">Asset Type</label>
+                        <select id="asset-type" class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white focus:border-green-500 focus:outline-none transition">
+                            <option value="usde">sUSDe (Ethena)</option>
+                            <option value="falcon">Falcon (LST)</option>
+                            <option value="pendle">Pendle PT-Token</option>
+                        </select>
+                    </div>
+
+                    <!-- Amount Input -->
+                    <div>
+                        <label class="block text-sm font-medium mb-3 text-slate-300">Amount</label>
+                        <input id="exit-amount" type="number" placeholder="Enter amount..." class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:border-green-500 focus:outline-none transition" value="10000">
+                    </div>
+
+                    <!-- Calculate Button -->
+                    <div class="flex items-end">
+                        <button id="calculate-btn" class="w-full neon-border px-6 py-3 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition">
+                            Calculate Exit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison View -->
+        <section class="mb-12">
+            <div class="comparison-container">
+                <!-- Left: Safety Path (Redemption) -->
+                <div class="comparison-card comparison-card-left">
+                    <div class="mb-8">
+                        <p class="text-sm text-slate-500 mb-2">Strategy</p>
+                        <h3 class="text-2xl font-bold">Redemption (Cooldown)</h3>
+                        <p class="text-xs text-slate-500 mt-2">The Safe Path: Wait for protocol unlock window</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Countdown Timer -->
+                        <div class="status-box status-box-safe">
+                            <p class="text-xs text-slate-500 mb-3">Time Remaining</p>
+                            <div class="flex items-baseline gap-2">
+                                <p class="text-5xl font-bold text-green-400 timer-display" data-redemption-days>7</p>
+                                <p class="text-xl text-slate-400">days</p>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-3">Unlock date: 2024-01-26 14:30 UTC</p>
+                        </div>
+
+                        <!-- NAV Value -->
+                        <div>
+                            <p class="text-xs text-slate-500 mb-2">Net Asset Value (NAV)</p>
+                            <div class="flex items-baseline gap-2">
+                                <p class="text-3xl font-bold" data-redemption-nav>$10,000</p>
+                                <p class="text-sm text-green-400">100%</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefits -->
+                        <div class="status-box status-box-safe">
+                            <p class="text-xs text-green-400 font-semibold mb-2">✓ Benefits</p>
+                            <ul class="status-list text-slate-300">
+                                <li>• Full redemption value</li>
+                                <li>• No slippage or haircut</li>
+                                <li>• Protocol-validated exit</li>
+                            </ul>
+                        </div>
+
+                        <!-- Risks -->
+                        <div class="status-box status-box-warning">
+                            <p class="text-xs text-yellow-400 font-semibold mb-2">⚠ Risks</p>
+                            <ul class="status-list text-slate-300">
+                                <li>• 7-day lock-up period</li>
+                                <li>• De-peg exposure (worst case 2%)</li>
+                                <li>• Opportunity cost: 168 hours</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Market Path (DEX) -->
+                <div class="comparison-card comparison-card-right">
+                    <div class="mb-8">
+                        <p class="text-sm text-slate-500 mb-2">Strategy</p>
+                        <h3 class="text-2xl font-bold">Instant Liquidity (DEX)</h3>
+                        <p class="text-xs text-slate-500 mt-2">The Fast Path: Exit immediately on Uniswap</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- Instant Execution -->
+                        <div class="status-box status-box-warning">
+                            <p class="text-xs text-slate-500 mb-3">Execution Speed</p>
+                            <div class="flex items-baseline gap-2">
+                                <p class="text-5xl font-bold text-orange-400 timer-display">2</p>
+                                <p class="text-xl text-slate-400">minutes</p>
+                            </div>
+                            <p class="text-xs text-slate-600 mt-3">Est. time via Uniswap V4</p>
+                        </div>
+
+                        <!-- Market Price with Haircut -->
+                        <div>
+                            <p class="text-xs text-slate-500 mb-2">Market Price (DEX Slippage)</p>
+                            <div class="flex items-baseline justify-between">
+                                <div>
+                                    <p class="text-3xl font-bold" data-market-price>$9,960</p>
+                                    <p class="text-xs text-slate-500 mt-1" data-market-haircut>0.4% haircut</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm text-red-400 font-semibold" data-market-loss>-$40</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Benefits -->
+                        <div class="status-box status-box-blue">
+                            <p class="text-xs text-blue-400 font-semibold mb-2">✓ Benefits</p>
+                            <ul class="status-list text-slate-300">
+                                <li>• Instant capital access</li>
+                                <li>• 168 hours of liquidity gain</li>
+                                <li>• Eliminates de-peg risk (worst-case 2%)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Costs -->
+                        <div class="status-box status-box-warning">
+                            <p class="text-xs text-orange-400 font-semibold mb-2">⚠ Costs</p>
+                            <ul class="status-list text-slate-300">
+                                <li>• 0.4% DEX slippage (-$40)</li>
+                                <li>• Gas fees (~$3-5)</li>
+                                <li>• Foregoes final yield (~$2.40/day)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Liquidity Gain Badge -->
+        <section class="mb-12">
+            <div id="liquidity-badge" class="liquidity-badge">
+                <p class="text-sm text-slate-400 mb-3">Decision Metric</p>
+                <h2 class="text-4xl font-bold mb-2">
+                    <span class="text-green-400">Gain:</span> <span data-liquidity-hours>168 Hours</span>
+                </h2>
+                <p class="text-lg text-slate-300 mb-6">Capital Efficiency by Exiting Early</p>
+                
+                <div class="liquidity-metric">
+                    <div>
+                        <p class="text-xs text-slate-500 mb-2">Cost of Waiting 7 Days</p>
+                        <p class="text-2xl font-bold text-red-400">$16.80</p>
+                        <p class="text-xs text-slate-500 mt-1">Forgone yield</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 mb-2">Cost of Exiting Now</p>
+                        <p class="text-2xl font-bold text-orange-400">$43</p>
+                        <p class="text-xs text-slate-500 mt-1">Slippage + gas fees</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 mb-2">Net Recommendation</p>
+                        <p class="text-2xl font-bold text-green-400" data-recommendation>Exit Now</p>
+                        <p class="text-xs text-slate-500 mt-1">Saves $26.20 gross</p>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-500 mt-8">*Analysis assumes no de-peg event. If Ethena de-pegs 2%, loss extends to $200+</p>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="flex gap-4 justify-center mb-12 flex-wrap">
+            <button id="execute-exit" class="btn-primary">
+                Execute Exit on Uniswap
+            </button>
+            <button id="wait-btn" class="btn-secondary">
+                Wait for Redemption
+            </button>
+        </section>
+
+        <!-- Detailed Analysis Table -->
+        <section class="mb-12">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-800">
+                    <h3 class="font-semibold">Scenario Analysis</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="scenario-table" data-scenario-table>
+                        <thead>
+                            <tr>
+                                <th>Scenario</th>
+                                <th class="scenario-table-mono">Redemption Value</th>
+                                <th class="scenario-table-mono">Market Value</th>
+                                <th class="scenario-table-mono">Recommendation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Best Case (No De-peg)</td>
+                                <td class="scenario-table-mono text-green-400">$10,000</td>
+                                <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
+                            </tr>
+                            <tr>
+                                <td>Mid Case (0.5% De-peg)</td>
+                                <td class="scenario-table-mono text-yellow-400">$9,950</td>
+                                <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                <td class="scenario-table-mono"><span class="text-yellow-400 font-semibold">NEUTRAL</span></td>
+                            </tr>
+                            <tr>
+                                <td>Worst Case (2% De-peg)</td>
+                                <td class="scenario-table-mono text-red-400">$9,800</td>
+                                <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 bg-slate-800/50 text-xs text-slate-500">
+                    <p>Analysis assumes: 7-day cooldown window, current Uniswap V4 pricing, no further yield accrual. De-peg risk historical range: 0.2% - 2.0%</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Disclaimer Footer -->
+        <footer class="border-t border-slate-800 pt-8 pb-12">
+            <p class="text-xs text-slate-500 text-center">
+                Data provided by <span class="text-slate-400 font-semibold">Nairobi Engine logic nodes</span>. Exit data refreshes every 30 seconds. 
+                <br>Not financial advice. Please verify all calculations before executing any trades.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Calculate button handler
+        document.getElementById('calculate-btn').addEventListener('click', () => {
+            const assetType = document.getElementById('asset-type').value;
+            const amount = parseFloat(document.getElementById('exit-amount').value);
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            console.log(`[Arbitrage] Calculating exit for ${amount} ${assetType.toUpperCase()}`);
+            // Connects to exit-optimizer.js
+            if (window.exitOptimizer) {
+                window.exitOptimizer.calculateExit(assetType, amount);
+            }
+        });
+
+        // Execute exit button
+        document.getElementById('execute-exit').addEventListener('click', () => {
+            const amount = document.getElementById('exit-amount').value;
+            alert(`Executing exit of ${amount} on Uniswap V4...\n\n(This will connect to your wallet integration)`);
+        });
+
+        // Wait button
+        document.getElementById('wait-btn').addEventListener('click', () => {
+            alert('You\'ve chosen to wait for the 7-day redemption window. Good luck!');
+        });
+    </script>
+    <script src="risk-core.js"></script>
+   <script src="exit-optimizer.js"></script>
+   <script src="nairobi-agent.js"></script>
+   <script src="audit-manager.js"></script>
+    
+</body>
+</html>
