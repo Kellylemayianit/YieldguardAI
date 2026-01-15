@@ -5,372 +5,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YieldGuard AI - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* ========================================
-           RISK & YIELD ENGINE (Core Utility)
-           risk-visuals.css + dashboard styles
-           ======================================== */
-
-        .pulse-indicator {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Status Color Palette */
-        .status-safe {
-            color: rgb(34, 197, 94);
-            border-color: rgba(34, 197, 94, 0.3);
-            background-color: rgba(34, 197, 94, 0.05);
-        }
-
-        .status-warning {
-            color: rgb(234, 179, 8);
-            border-color: rgba(234, 179, 8, 0.3);
-            background-color: rgba(234, 179, 8, 0.05);
-        }
-
-        .status-critical {
-            color: rgb(239, 68, 68);
-            border-color: rgba(239, 68, 68, 0.3);
-            background-color: rgba(239, 68, 68, 0.05);
-        }
-
-        /* Pulse Animations */
-        .pulse-dot {
-            animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .pulse-glow {
-            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-        }
-
-        .pulse-alert {
-            animation: pulse-alert 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse-alert {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
-            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-        }
-
-        /* Risk Progress Bars */
-        .risk-progress {
-            width: 100%;
-            height: 8px;
-            background-color: rgba(30, 41, 59, 0.8);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .risk-progress-safe {
-            background: linear-gradient(90deg, rgb(34, 197, 94), rgba(34, 197, 94, 0.5));
-        }
-
-        .risk-progress-warning {
-            background: linear-gradient(90deg, rgb(234, 179, 8), rgba(234, 179, 8, 0.5));
-        }
-
-        /* Sidebar Collapse */
-        .sidebar-collapsed #sidebar-nav { width: 80px; }
-        .sidebar-collapsed #sidebar-labels { display: none; }
-
-        /* Nairobi Agent Panel */
-        .agent-panel {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .agent-panel.open {
-            transform: translateX(0);
-        }
-
-        /* Chat Bubble Styles */
-        .chat-user {
-            background-color: rgba(34, 197, 94, 0.15);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .chat-agent {
-            background-color: rgba(30, 41, 59, 1);
-            border: 1px solid rgba(100, 116, 139, 0.3);
-        }
-
-        /* ========================================
-           NAIROBI INTELLIGENCE (AI Utility)
-           nairobi-chat.css
-           ======================================== */
-
-        #agent-panel {
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-        }
-
-        .typing-indicator {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: rgb(100, 116, 139);
-            animation: bounce 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-    </style>
+    <link rel="stylesheet" href="css/risk-visuals.css">
 </head>
 <body class="bg-slate-950 text-white">
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300">
-            <div class="p-4 border-b border-slate-800">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-green-500/20 border border-green-500 rounded"></div>
-                    <span class="font-bold">YieldGuard</span>
-                </div>
+    <!-- Global Fixed Sidebar -->
+    <aside id="global-sidebar" class="sidebar-container fixed left-0 top-0 h-screen w-20 bg-slate-900/80 backdrop-blur-md border-r border-slate-800 flex flex-col items-center py-8 transition-all duration-300 z-40 hover:w-64 group">
+        <!-- Logo/Home -->
+        <a href="index.html" class="flex items-center justify-center mb-8 group-hover:justify-start group-hover:px-4 transition-all">
+            <div class="w-10 h-10 bg-green-500/20 border border-green-500 rounded flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
-            
-            <nav id="sidebar-nav" class="flex-1 p-4 space-y-2">
-                <a href="#monitoring" class="flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-800 text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    <span id="sidebar-labels">Monitoring</span>
-                </a>
-                <a href="arbitrage.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-800 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span id="sidebar-labels">Arbitrage</span>
-                </a>
-                <a href="reports.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-800 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span id="sidebar-labels">Tax Logs</span>
-                </a>
-                <a href="#settings" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-slate-800 transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-                    <span id="sidebar-labels">Settings</span>
-                </a>
-            </nav>
+            <span class="ml-4 font-bold text-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">YieldGuard</span>
+        </a>
 
-            <div class="p-4 border-t border-slate-800">
-                <button id="toggle-sidebar" class="w-full px-4 py-2 text-sm text-slate-400 hover:text-white transition">
-                    Collapse
+        <!-- Navigation Items -->
+        <nav class="flex flex-col gap-4 flex-1">
+            <!-- Dashboard -->
+            <a href="dashboard.html" class="sidebar-item nav-item active" data-page="dashboard">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pulse Dashboard</span>
+            </a>
+
+            <!-- Arbitrage -->
+            <a href="arbitrage.html" class="sidebar-item nav-item" data-page="arbitrage">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Exit Optimizer</span>
+            </a>
+
+            <!-- Reports -->
+            <a href="reports.html" class="sidebar-item nav-item" data-page="reports">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Audit Logs</span>
+            </a>
+        </nav>
+
+        <!-- Settings -->
+        <a href="#settings" class="sidebar-item nav-item" data-page="settings">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
+            </a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="ml-20 min-h-screen transition-all duration-300">
+        <!-- Top Bar -->
+        <div class="sticky top-0 bg-slate-900/80 backdrop-blur border-b border-slate-800 px-8 py-4 flex justify-between items-center z-30">
+            <h1 class="text-2xl font-bold">PulseScore Command Center</h1>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
+                    <div class="w-2 h-2 bg-green-500 rounded-full pulse-indicator"></div>
+                    <span class="text-sm text-slate-400">Live</span>
+                </div>
+                <button id="open-agent" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition text-sm">
+                    Ask Nairobi (Ctrl+K)
                 </button>
             </div>
-        </aside>
+        </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-auto">
-            <!-- Top Bar -->
-            <div class="sticky top-0 bg-slate-900/80 backdrop-blur border-b border-slate-800 px-8 py-4 flex justify-between items-center z-40">
-                <h1 class="text-2xl font-bold">PulseScore Command Center</h1>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2 px-4 py-2 bg-slate-800 rounded-lg">
-                        <div class="w-2 h-2 bg-green-500 rounded-full pulse-indicator"></div>
-                        <span class="text-sm text-slate-400">Live</span>
+        <!-- 3-Column Grid -->
+        <div class="p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Column 1: PulseScore Tower -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-lg font-semibold mb-6">Monitored Assets</h2>
+                    <div id="pulse-tower" class="space-y-4">
+                        <!-- Ethena Card -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="ethena">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold">Ethena (sUSDe)</h3>
+                                    <p class="text-xs text-slate-500">Synthetic USD</p>
+                                </div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full pulse-indicator"></div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">PulseScore</p>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full w-4/5 bg-green-500"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold" data-score>78</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Current APR</p>
+                                    <p class="text-sm font-semibold text-green-400">12.4%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Status</p>
+                                    <p class="text-xs text-green-400" data-status>Safe</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Falcon Card -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="falcon">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold">Falcon</h3>
+                                    <p class="text-xs text-slate-500">LST Derivative</p>
+                                </div>
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full pulse-indicator"></div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">PulseScore</p>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full w-3/5 bg-yellow-500"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold" data-score>62</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Current APR</p>
+                                    <p class="text-sm font-semibold text-yellow-400">9.1%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Status</p>
+                                    <p class="text-xs text-yellow-400" data-status>Monitor</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pendle Card -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="pendle">
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h3 class="font-semibold">Pendle</h3>
+                                    <p class="text-xs text-slate-500">Yield Token</p>
+                                </div>
+                                <div class="w-3 h-3 bg-green-500 rounded-full pulse-indicator"></div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">PulseScore</p>
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="h-full w-4/5 bg-green-500"></div>
+                                        </div>
+                                        <span class="text-sm font-semibold" data-score>81</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Current APR</p>
+                                    <p class="text-sm font-semibold text-green-400">14.2%</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Maturity</p>
+                                    <p class="text-xs text-slate-400">4 days</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button id="open-agent" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition text-sm">
-                        Ask Nairobi
-                    </button>
                 </div>
-            </div>
 
-            <!-- 3-Column Grid -->
-            <div class="p-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Column 1: PulseScore Tower -->
-                    <div class="lg:col-span-1">
-                        <h2 class="text-lg font-semibold mb-6">Monitored Assets</h2>
-                        <div id="pulse-tower" class="space-y-4">
-                            <!-- Ethena Card -->
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="ethena">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div>
-                                        <h3 class="font-semibold">Ethena (sUSDe)</h3>
-                                        <p class="text-xs text-slate-500">Synthetic USD</p>
-                                    </div>
-                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-indicator"></div>
-                                </div>
-                                <div class="space-y-3">
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">PulseScore</p>
-                                        <div class="flex items-center gap-2">
-                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
-                                                <div class="h-full w-4/5 bg-green-500"></div>
-                                            </div>
-                                            <span class="text-sm font-semibold" data-score>78</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Current APR</p>
-                                        <p class="text-sm font-semibold text-green-400">12.4%</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Status</p>
-                                        <p class="text-xs text-green-400" data-status>Safe</p>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Column 2: Yield Analytics -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-lg font-semibold mb-6">Risk-Adjusted APY (7d)</h2>
+                    <div class="bg-slate-900 border border-slate-700 rounded-lg p-6 h-96 flex flex-col justify-center items-center">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                            <p class="text-slate-500 text-sm">Chart data loads via risk-core.js</p>
+                            <p class="text-slate-600 text-xs mt-2">Real-time APY from Pendle V2 & Ethena</p>
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- Falcon Card -->
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="falcon">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div>
-                                        <h3 class="font-semibold">Falcon</h3>
-                                        <p class="text-xs text-slate-500">LST Derivative</p>
-                                    </div>
-                                    <div class="w-3 h-3 bg-yellow-500 rounded-full pulse-indicator"></div>
-                                </div>
-                                <div class="space-y-3">
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">PulseScore</p>
-                                        <div class="flex items-center gap-2">
-                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
-                                                <div class="h-full w-3/5 bg-yellow-500"></div>
-                                            </div>
-                                            <span class="text-sm font-semibold" data-score>62</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Current APR</p>
-                                        <p class="text-sm font-semibold text-yellow-400">9.1%</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Status</p>
-                                        <p class="text-xs text-yellow-400" data-status>Monitor</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Pendle Card -->
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition" data-protocol="pendle">
-                                <div class="flex items-start justify-between mb-4">
-                                    <div>
-                                        <h3 class="font-semibold">Pendle</h3>
-                                        <p class="text-xs text-slate-500">Yield Token</p>
-                                    </div>
-                                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-indicator"></div>
-                                </div>
-                                <div class="space-y-3">
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">PulseScore</p>
-                                        <div class="flex items-center gap-2">
-                                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
-                                                <div class="h-full w-4/5 bg-green-500"></div>
-                                            </div>
-                                            <span class="text-sm font-semibold" data-score>81</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Current APR</p>
-                                        <p class="text-sm font-semibold text-green-400">14.2%</p>
-                                    </div>
-                                    <div>
-                                        <p class="text-xs text-slate-500 mb-1">Maturity</p>
-                                        <p class="text-xs text-slate-400">4 days</p>
-                                    </div>
+                <!-- Column 3: Liveness Alerts -->
+                <div class="lg:col-span-1">
+                    <h2 class="text-lg font-semibold mb-6">Alerts & Events</h2>
+                    <div id="liveness-alerts" class="space-y-3">
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold">Pendle Maturity Alert</p>
+                                    <p class="text-xs text-slate-500 mt-1">Approaching in 4 days</p>
+                                    <p class="text-xs text-slate-600 mt-2">2024-01-19 14:30 UTC</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Column 2: Yield Analytics -->
-                    <div class="lg:col-span-1">
-                        <h2 class="text-lg font-semibold mb-6">Risk-Adjusted APY (7d)</h2>
-                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-6 h-96 flex flex-col justify-center items-center">
-                            <div class="text-center">
-                                <svg class="w-16 h-16 mx-auto text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                                </svg>
-                                <p class="text-slate-500 text-sm">Chart data loads via risk-core.js</p>
-                                <p class="text-slate-600 text-xs mt-2">Real-time APY from Pendle V2 & Ethena</p>
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold">Ethena Funding Spike</p>
+                                    <p class="text-xs text-slate-500 mt-1">Rate flipped positive (+0.08%)</p>
+                                    <p class="text-xs text-slate-600 mt-2">2024-01-19 12:15 UTC</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Column 3: Liveness Alerts -->
-                    <div class="lg:col-span-1">
-                        <h2 class="text-lg font-semibold mb-6">Alerts & Events</h2>
-                        <div id="liveness-alerts" class="space-y-3">
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2 flex-shrink-0"></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold">Pendle Maturity Alert</p>
-                                        <p class="text-xs text-slate-500 mt-1">Approaching in 4 days</p>
-                                        <p class="text-xs text-slate-600 mt-2">2024-01-19 14:30 UTC</p>
-                                    </div>
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold">AVS Liveness Update</p>
+                                    <p class="text-xs text-slate-500 mt-1">EigenLayer security layer healthy</p>
+                                    <p class="text-xs text-slate-600 mt-2">2024-01-19 10:45 UTC</p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold">Ethena Funding Spike</p>
-                                        <p class="text-xs text-slate-500 mt-1">Rate flipped positive (+0.08%)</p>
-                                        <p class="text-xs text-slate-600 mt-2">2024-01-19 12:15 UTC</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold">AVS Liveness Update</p>
-                                        <p class="text-xs text-slate-500 mt-1">EigenLayer security layer healthy</p>
-                                        <p class="text-xs text-slate-600 mt-2">2024-01-19 10:45 UTC</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
-                                <div class="flex items-start gap-3">
-                                    <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-semibold">Buffer Stable</p>
-                                        <p class="text-xs text-slate-500 mt-1">7-day cooldown maintained</p>
-                                        <p class="text-xs text-slate-600 mt-2">2024-01-18 23:00 UTC</p>
-                                    </div>
+                        <div class="bg-slate-900 border border-slate-700 rounded-lg p-4 hover:border-slate-600 transition">
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold">Buffer Stable</p>
+                                    <p class="text-xs text-slate-500 mt-1">7-day cooldown maintained</p>
+                                    <p class="text-xs text-slate-600 mt-2">2024-01-18 23:00 UTC</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
 
-        <!-- Nairobi Agent Panel -->
-        <aside id="agent-panel" class="agent-panel fixed right-0 top-0 h-screen w-96 bg-slate-900 border-l border-slate-800 shadow-lg z-50 flex flex-col">
-            <div class="flex items-center justify-between p-4 border-b border-slate-800">
-                <h2 class="font-semibold">Nairobi AI Agent</h2>
+    <!-- Nairobi Command Palette Modal -->
+    <div id="agent-panel" class="nairobi-modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="nairobi-command-palette bg-slate-900/95 border border-slate-700 rounded-lg shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                <h2 class="text-xl font-semibold">Nairobi AI Agent</h2>
                 <button id="close-agent" class="text-slate-400 hover:text-white transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
             <!-- Chat Messages -->
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4">
                 <div class="flex justify-start">
                     <div class="bg-slate-800 rounded-lg px-4 py-2 max-w-xs">
                         <p class="text-sm text-slate-300">Hi! I'm Nairobi. Ask me about your positions or safety metrics.</p>
@@ -379,57 +249,20 @@
             </div>
 
             <!-- Input -->
-            <div class="border-t border-slate-800 p-4">
+            <div class="border-t border-slate-700 p-6">
                 <div class="flex gap-2">
-                    <input id="agent-input" type="text" placeholder="Ask about your Falcon position..." class="flex-1 px-4 py-2 rounded-lg bg-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30">
-                    <button id="send-message" class="px-4 py-2 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition">
+                    <input id="agent-input" type="text" placeholder="Ask about your positions..." class="flex-1 px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30">
+                    <button id="send-message" class="px-4 py-3 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                     </button>
                 </div>
             </div>
-        </aside>
+        </div>
     </div>
 
-    <script>
-        // Sidebar toggle
-        document.getElementById('toggle-sidebar').addEventListener('click', () => {
-            document.querySelector('body').classList.toggle('sidebar-collapsed');
-        });
-
-        // Agent panel toggle
-        document.getElementById('open-agent').addEventListener('click', () => {
-            document.getElementById('agent-panel').classList.add('open');
-            document.getElementById('agent-input').focus();
-        });
-
-        document.getElementById('close-agent').addEventListener('click', () => {
-            document.getElementById('agent-panel').classList.remove('open');
-        });
-
-        // Send message handler
-        document.getElementById('send-message').addEventListener('click', () => {
-            const input = document.getElementById('agent-input');
-            if (input.value.trim()) {
-                const msg = document.createElement('div');
-                msg.className = 'flex justify-end';
-                msg.innerHTML = `<div class="bg-green-500/20 rounded-lg px-4 py-2 max-w-xs border border-green-500/30"><p class="text-sm text-green-300">${input.value}</p></div>`;
-                document.getElementById('chat-messages').appendChild(msg);
-                input.value = '';
-                document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
-            }
-        });
-
-        // Enter key to send
-        document.getElementById('agent-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                document.getElementById('send-message').click();
-            }
-        });
-    </script>
-    <script src="risk-core.js"></script>
-   <script src="exit-optimizer.js"></script>
-   <script src="nairobi-agent.js"></script>
-   <script src="audit-manager.js"></script>
-    
+    <script src="js/risk-core.js"></script>
+    <script src="js/nairobi-agent.js"></script>
+    <script src="js/dashboard-init.js"></script>
+    <script src="js/global-sidebar.js"></script>
 </body>
 </html>

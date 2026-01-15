@@ -1,45 +1,45 @@
 /* ========================================
-   YIELDGUARD AI - RISK & YIELD ENGINE
-   risk-visuals.css
+   RISK & YIELD ENGINE (Core Utility)
+   css/risk-visuals.css
+   Extracted from dashboard.html
    ======================================== */
 
-/* ======================
-   Status Color Palette
-   ====================== */
+.pulse-indicator {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Status Color Palette */
 .status-safe {
-    color: rgb(34, 197, 94); /* text-green-400 */
+    color: rgb(34, 197, 94);
     border-color: rgba(34, 197, 94, 0.3);
     background-color: rgba(34, 197, 94, 0.05);
 }
 
 .status-warning {
-    color: rgb(234, 179, 8); /* text-yellow-400 */
+    color: rgb(234, 179, 8);
     border-color: rgba(234, 179, 8, 0.3);
     background-color: rgba(234, 179, 8, 0.05);
 }
 
 .status-critical {
-    color: rgb(239, 68, 68); /* text-red-500 */
+    color: rgb(239, 68, 68);
     border-color: rgba(239, 68, 68, 0.3);
     background-color: rgba(239, 68, 68, 0.05);
 }
 
-/* ======================
-   Pulse Animations
-   ====================== */
-
+/* Pulse Animations */
 .pulse-dot {
     animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse-dot {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
 
 .pulse-glow {
@@ -47,202 +47,20 @@
 }
 
 @keyframes pulse-glow {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
-    }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
 }
 
-/* Alert pulse - red */
 .pulse-alert {
     animation: pulse-alert 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse-alert {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-    }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+    70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
 }
 
-/* Warning pulse - yellow */
-.pulse-warning {
-    animation: pulse-warning 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse-warning {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.4);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(234, 179, 8, 0);
-    }
-}
-
-/* ======================
-   Risk Heatmap Styling
-   ====================== */
-
-.risk-heatmap {
-    display: grid;
-    gap: 1rem;
-}
-
-.heatmap-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 0.75rem;
-}
-
-.heatmap-cell {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(30, 41, 59, 0.8);
-    background-color: rgba(15, 23, 42, 0.5);
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.heatmap-cell:hover {
-    border-color: rgba(34, 197, 94, 0.5);
-    background-color: rgba(34, 197, 94, 0.05);
-    transform: translateY(-2px);
-}
-
-.heatmap-cell-safe {
-    border-left: 4px solid rgb(34, 197, 94);
-}
-
-.heatmap-cell-safe:hover {
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
-}
-
-.heatmap-cell-warning {
-    border-left: 4px solid rgb(234, 179, 8);
-}
-
-.heatmap-cell-warning:hover {
-    box-shadow: 0 0 15px rgba(234, 179, 8, 0.3);
-}
-
-.heatmap-cell-critical {
-    border-left: 4px solid rgb(239, 68, 68);
-}
-
-.heatmap-cell-critical:hover {
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
-}
-
-.heatmap-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 0.5rem;
-}
-
-.heatmap-label {
-    font-size: 0.75rem;
-    color: rgb(148, 163, 184);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-/* ======================
-   PulseScore Meter
-   ====================== */
-
-.pulse-meter {
-    position: relative;
-    width: 200px;
-    height: 200px;
-}
-
-.pulse-meter-gauge {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.pulse-meter-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-.pulse-meter-score {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.pulse-meter-label {
-    font-size: 0.875rem;
-    color: rgb(148, 163, 184);
-    margin-top: 0.5rem;
-}
-
-/* ======================
-   Status Indicators
-   ====================== */
-
-.status-indicator {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.status-indicator-dot {
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-}
-
-.status-indicator-safe .status-indicator-dot {
-    background-color: rgb(34, 197, 94);
-}
-
-.status-indicator-safe {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: rgb(34, 197, 94);
-    border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.status-indicator-warning .status-indicator-dot {
-    background-color: rgb(234, 179, 8);
-}
-
-.status-indicator-warning {
-    background-color: rgba(234, 179, 8, 0.1);
-    color: rgb(234, 179, 8);
-    border: 1px solid rgba(234, 179, 8, 0.3);
-}
-
-.status-indicator-critical .status-indicator-dot {
-    background-color: rgb(239, 68, 68);
-}
-
-.status-indicator-critical {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: rgb(239, 68, 68);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-/* ======================
-   Risk Progress Bars
-   ====================== */
-
+/* Risk Progress Bars */
 .risk-progress {
     width: 100%;
     height: 8px;
@@ -259,104 +77,27 @@
     background: linear-gradient(90deg, rgb(234, 179, 8), rgba(234, 179, 8, 0.5));
 }
 
-.risk-progress-critical {
-    background: linear-gradient(90deg, rgb(239, 68, 68), rgba(239, 68, 68, 0.5));
+/* Sidebar Collapse */
+.sidebar-collapsed #sidebar-nav { width: 80px; }
+.sidebar-collapsed #sidebar-labels { display: none; }
+
+/* Nairobi Agent Panel */
+.agent-panel {
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
 }
 
-/* ======================
-   Neon Border Effects
-   ====================== */
-
-.neon-border-safe {
-    border: 1px solid rgba(34, 197, 94, 0.5);
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3), inset 0 0 10px rgba(34, 197, 94, 0.05);
+.agent-panel.open {
+    transform: translateX(0);
 }
 
-.neon-border-warning {
-    border: 1px solid rgba(234, 179, 8, 0.5);
-    box-shadow: 0 0 10px rgba(234, 179, 8, 0.3), inset 0 0 10px rgba(234, 179, 8, 0.05);
+/* Chat Bubble Styles */
+.chat-user {
+    background-color: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.neon-border-critical {
-    border: 1px solid rgba(239, 68, 68, 0.5);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3), inset 0 0 10px rgba(239, 68, 68, 0.05);
-}
-
-/* ======================
-   Liveness Badge
-   ====================== */
-
-.liveness-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.liveness-live {
-    background-color: rgba(34, 197, 94, 0.1);
-    color: rgb(34, 197, 94);
-}
-
-.liveness-live::before {
-    content: '';
-    width: 0.375rem;
-    height: 0.375rem;
-    background-color: rgb(34, 197, 94);
-    border-radius: 50%;
-    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.liveness-warning {
-    background-color: rgba(234, 179, 8, 0.1);
-    color: rgb(234, 179, 8);
-}
-
-.liveness-warning::before {
-    content: '';
-    width: 0.375rem;
-    height: 0.375rem;
-    background-color: rgb(234, 179, 8);
-    border-radius: 50%;
-    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.liveness-down {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: rgb(239, 68, 68);
-}
-
-/* ======================
-   Transition Effects
-   ====================== */
-
-.status-transition {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.status-transition-fast {
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ======================
-   Data Density Utilities
-   ====================== */
-
-.dense-spacing {
-    --tw-space-y-reverse: 0;
-    margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-    margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
-.compact-text {
-    line-height: 1.25;
-}
-
-.mono-font {
-    font-family: 'JetBrains Mono', 'Roboto Mono', 'Courier New', monospace;
+.chat-agent {
+    background-color: rgba(30, 41, 59, 1);
+    border: 1px solid rgba(100, 116, 139, 0.3);
 }

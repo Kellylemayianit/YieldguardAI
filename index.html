@@ -5,277 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YieldGuard AI - DeFi Risk Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* ========================================
-           DISTRIBUTION & GROWTH UTILITY (Lead Magnet)
-           marketing-ui.css
-           ======================================== */
-
-        /* PulseTicker Animation */
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        
-        .ticker-scroll {
-            animation: scroll 30s linear infinite;
-        }
-        
-        .ticker-scroll:hover {
-            animation-play-state: paused;
-        }
-
-        /* Neon Border Effect */
-        .neon-border {
-            border: 1px solid rgba(34, 197, 94, 0.5);
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
-        }
-
-        /* Pulse Animation */
-        .pulse-dot {
-            animation: pulse-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse-animation {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        /* Shareable Risk Card Styles */
-        .risk-card {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
-        }
-
-        .risk-card-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #22c55e;
-            margin-bottom: 12px;
-        }
-
-        .risk-card-score {
-            font-size: 48px;
-            font-weight: 700;
-            color: #22c55e;
-            line-height: 1;
-        }
-
-        .risk-card-label {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Hero Section Gradient */
-        .hero-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-        }
-
-        /* Feature Card Hover */
-        .feature-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background-color: rgba(15, 23, 42, 0.5);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(34, 197, 94, 0.5);
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
-        }
-
-        /* CTA Button Glow */
-        .cta-button {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(34, 197, 94, 0.1);
-            transition: left 0.3s ease;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="css/marketing-ui.css">
 </head>
 <body class="bg-slate-950 text-white">
-    <!-- Sticky Navbar -->
-    <nav id="navbar" class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-green-500/20 border border-green-500 rounded"></div>
-                <span class="font-bold text-lg">YieldGuard AI</span>
+    <!-- Global Fixed Sidebar -->
+    <aside id="global-sidebar" class="sidebar-container fixed left-0 top-0 h-screen w-20 bg-slate-900/80 backdrop-blur-md border-r border-slate-800 flex flex-col items-center py-8 transition-all duration-300 z-40 hover:w-64 group">
+        <!-- Logo/Home -->
+        <a href="index.html" class="flex items-center justify-center mb-8 group-hover:justify-start group-hover:px-4 transition-all">
+            <div class="w-10 h-10 bg-green-500/20 border border-green-500 rounded flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
-            <div class="hidden md:flex gap-8">
-                <a href="dashboard.html" class="text-sm text-slate-400 hover:text-white transition">PulseScore Dashboard</a>
-                <a href="arbitrage.html" class="text-sm text-slate-400 hover:text-white transition">Exit Optimizer</a>
-            </div>
-            <button id="connect-wallet" class="neon-border px-6 py-2 rounded text-sm font-medium text-green-400 hover:bg-green-500/10 transition">
-                Connect Wallet
-            </button>
-        </div>
-    </nav>
+            <span class="ml-4 font-bold text-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">YieldGuard</span>
+        </a>
 
-    <!-- PulseTicker Bar -->
-    <div id="pulse-ticker" class="bg-slate-900 border-b border-slate-800 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 py-3">
-            <div class="flex whitespace-nowrap ticker-scroll">
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Ethena: <span class="text-green-400 font-semibold">12.4%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Falcon: <span class="text-yellow-400 font-semibold">9.1%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Pendle: <span class="text-green-400 font-semibold">14.2%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Safety Buffer: <span class="text-green-400 font-semibold">Active</span></span>
-                <!-- Duplicate for seamless loop -->
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Ethena: <span class="text-green-400 font-semibold">12.4%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Falcon: <span class="text-yellow-400 font-semibold">9.1%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Pendle: <span class="text-green-400 font-semibold">14.2%</span> APR</span>
-                <span class="px-6 text-sm text-slate-300 flex-shrink-0">Safety Buffer: <span class="text-green-400 font-semibold">Active</span></span>
-            </div>
-        </div>
-    </div>
+        <!-- Navigation Items -->
+        <nav class="flex flex-col gap-4 flex-1">
+            <!-- Dashboard -->
+            <a href="dashboard.html" class="sidebar-item nav-item" data-page="dashboard">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pulse Dashboard</span>
+            </a>
 
-    <!-- Hero Section -->
-    <section id="hero" class="min-h-[60vh] flex flex-col justify-center items-center px-4 py-20 hero-gradient">
-        <div class="text-center max-w-4xl">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                Protect Your Yield.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Master the Safety Buffer.</span>
-            </h1>
-            <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto">
-                Real-time risk monitoring for Ethena, Falcon, and Pendle. Monitor your positions. Exit with confidence. Dominate 2026.
-            </p>
-            <button id="launch-terminal" class="neon-border px-8 py-4 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition text-lg cta-button">
-                Launch Terminal
-            </button>
-        </div>
-    </section>
+            <!-- Arbitrage -->
+            <a href="arbitrage.html" class="sidebar-item nav-item" data-page="arbitrage">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Exit Optimizer</span>
+            </a>
 
-    <!-- Global PulseScore Card -->
-    <section id="snapshot-section" class="max-w-7xl mx-auto px-4 py-20">
-        <div class="bg-slate-900 border border-slate-800 rounded-lg p-8 md:p-12">
-            <h2 class="text-2xl font-bold mb-12 text-center">Global Risk Snapshot</h2>
-            
-            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-                <!-- Global PulseScore Gauge -->
-                <div class="flex-1 flex justify-center">
-                    <div id="global-score" class="relative w-56 h-56">
-                        <svg viewBox="0 0 200 200" class="w-full h-full">
-                            <!-- Background circle -->
-                            <circle cx="100" cy="100" r="90" fill="none" stroke="#334155" stroke-width="8"/>
-                            <!-- Status indicator arc (Green for Safe) -->
-                            <circle cx="100" cy="100" r="90" fill="none" stroke="#22c55e" stroke-width="8" stroke-dasharray="283 376.8" opacity="0.8"/>
-                            <!-- Center circle -->
-                            <circle cx="100" cy="100" r="70" fill="#0f172a"/>
-                            <!-- Score text -->
-                            <text x="100" y="95" font-size="48" font-weight="bold" text-anchor="middle" fill="#22c55e">72</text>
-                            <text x="100" y="125" font-size="14" text-anchor="middle" fill="#94a3b8">Safe</text>
-                        </svg>
-                        <div class="absolute top-8 right-8 flex items-center gap-2">
-                            <div class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></div>
-                            <span class="text-xs text-slate-400">Live</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Reports -->
+            <a href="reports.html" class="sidebar-item nav-item" data-page="reports">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Audit Logs</span>
+            </a>
+        </nav>
 
-                <!-- Stats -->
-                <div class="flex-1">
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-sm text-slate-500 mb-2">Monitored Positions</p>
-                            <p class="text-3xl font-bold">3</p>
-                            <p class="text-xs text-slate-400 mt-1">Ethena, Falcon, Pendle</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500 mb-2">Average Safety Buffer</p>
-                            <p class="text-3xl font-bold">7d</p>
-                            <p class="text-xs text-slate-400 mt-1">Cooldown window</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-slate-500 mb-2">Risk Alerts (24h)</p>
-                            <p class="text-3xl font-bold text-yellow-400">1</p>
-                            <p class="text-xs text-slate-400 mt-1">Funding rate spike detected</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Settings -->
+        <a href="#settings" class="sidebar-item nav-item" data-page="settings">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+            <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
+        </a>
+    </aside>
 
-            <!-- Share Button -->
-            <div class="mt-12 flex justify-center">
-                <button id="share-farcaster" class="px-6 py-3 rounded-lg border border-slate-700 text-slate-300 hover:border-green-500 hover:text-green-400 transition text-sm font-medium">
-                    Share to Farcaster
+    <!-- Main Content Area -->
+    <div class="ml-20 min-h-screen transition-all duration-300">
+        <!-- Sticky Header -->
+        <nav class="sticky top-0 z-30 bg-slate-950/95 backdrop-blur border-b border-slate-800 px-8 py-4">
+            <div class="flex justify-between items-center max-w-7xl mx-auto">
+                <h1 class="text-2xl font-bold">YieldGuard AI</h1>
+                <button id="connect-wallet" class="neon-border px-6 py-2 rounded text-sm font-medium text-green-400 hover:bg-green-500/10 transition">
+                    Connect Wallet
                 </button>
             </div>
-        </div>
-    </section>
+        </nav>
 
-    <!-- Features Preview -->
-    <section class="max-w-7xl mx-auto px-4 py-20">
-        <h2 class="text-2xl font-bold mb-12">Why YieldGuard AI</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
-                <div class="w-10 h-10 bg-green-500/20 border border-green-500 rounded mb-4"></div>
-                <h3 class="font-semibold mb-2">Real-Time Monitoring</h3>
-                <p class="text-sm text-slate-400">Sub-second updates on APY, funding rates, and protocol health.</p>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
-                <div class="w-10 h-10 bg-yellow-500/20 border border-yellow-500 rounded mb-4"></div>
-                <h3 class="font-semibold mb-2">Smart Exit Logic</h3>
-                <p class="text-sm text-slate-400">Redemption vs. market value comparison for instant decisions.</p>
-            </div>
-            <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
-                <div class="w-10 h-10 bg-blue-500/20 border border-blue-500 rounded mb-4"></div>
-                <h3 class="font-semibold mb-2">Tax Compliance</h3>
-                <p class="text-sm text-slate-400">One-click KES/USD cost-basis reports for KRA audits.</p>
+        <!-- PulseTicker Bar -->
+        <div id="pulse-ticker" class="bg-slate-900 border-b border-slate-800 overflow-hidden">
+            <div class="px-8 py-3">
+                <div class="flex whitespace-nowrap ticker-scroll">
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Ethena: <span class="text-green-400 font-semibold">12.4%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Falcon: <span class="text-yellow-400 font-semibold">9.1%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Pendle: <span class="text-green-400 font-semibold">14.2%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Safety Buffer: <span class="text-green-400 font-semibold">Active</span></span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Ethena: <span class="text-green-400 font-semibold">12.4%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Falcon: <span class="text-yellow-400 font-semibold">9.1%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Pendle: <span class="text-green-400 font-semibold">14.2%</span> APR</span>
+                    <span class="px-6 text-sm text-slate-300 flex-shrink-0">Safety Buffer: <span class="text-green-400 font-semibold">Active</span></span>
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- CTA Footer -->
-    <section class="border-t border-slate-800 py-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-slate-400 mb-6">Join 1,000+ whales and hedge funds protecting their yield in 2026.</p>
-            <button id="cta-launch" class="neon-border px-8 py-3 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition cta-button">
-                Start Monitoring
-            </button>
-        </div>
-    </section>
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-[60vh] flex flex-col justify-center items-center px-8 py-20 hero-gradient">
+            <div class="text-center max-w-4xl">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Protect Your Yield.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600">Master the Safety Buffer.</span>
+                </h1>
+                <p class="text-lg text-slate-400 mb-12 max-w-2xl mx-auto">
+                    Real-time risk monitoring for Ethena, Falcon, and Pendle. Monitor your positions. Exit with confidence. Dominate 2026.
+                </p>
+                <button id="launch-terminal" class="neon-border px-8 py-4 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition text-lg cta-button">
+                    Launch Terminal
+                </button>
+            </div>
+        </section>
 
-    <script>
-        // Button event handlers
-        document.getElementById('launch-terminal')?.addEventListener('click', () => {
-            window.location.href = 'dashboard.html';
-        });
+        <!-- Global PulseScore Card -->
+        <section id="snapshot-section" class="max-w-7xl mx-auto px-8 py-20">
+            <div class="bg-slate-900 border border-slate-800 rounded-lg p-8 md:p-12">
+                <h2 class="text-2xl font-bold mb-12 text-center">Global Risk Snapshot</h2>
+                
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="flex-1 flex justify-center">
+                        <div id="global-score" class="relative w-56 h-56">
+                            <svg viewBox="0 0 200 200" class="w-full h-full">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#334155" stroke-width="8"/>
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#22c55e" stroke-width="8" stroke-dasharray="283 376.8" opacity="0.8"/>
+                                <circle cx="100" cy="100" r="70" fill="#0f172a"/>
+                                <text x="100" y="95" font-size="48" font-weight="bold" text-anchor="middle" fill="#22c55e">72</text>
+                                <text x="100" y="125" font-size="14" text-anchor="middle" fill="#94a3b8">Safe</text>
+                            </svg>
+                            <div class="absolute top-8 right-8 flex items-center gap-2">
+                                <div class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></div>
+                                <span class="text-xs text-slate-400">Live</span>
+                            </div>
+                        </div>
+                    </div>
 
-        document.getElementById('cta-launch')?.addEventListener('click', () => {
-            window.location.href = 'dashboard.html';
-        });
+                    <div class="flex-1">
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-sm text-slate-500 mb-2">Monitored Positions</p>
+                                <p class="text-3xl font-bold">3</p>
+                                <p class="text-xs text-slate-400 mt-1">Ethena, Falcon, Pendle</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500 mb-2">Average Safety Buffer</p>
+                                <p class="text-3xl font-bold">7d</p>
+                                <p class="text-xs text-slate-400 mt-1">Cooldown window</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500 mb-2">Risk Alerts (24h)</p>
+                                <p class="text-3xl font-bold text-yellow-400">1</p>
+                                <p class="text-xs text-slate-400 mt-1">Funding rate spike detected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        document.getElementById('connect-wallet')?.addEventListener('click', () => {
-            console.log('[Index] Wallet connection initiated');
-            alert('Wallet connection coming soon');
-        });
+                <div class="mt-12 flex justify-center">
+                    <button id="share-farcaster" class="px-6 py-3 rounded-lg border border-slate-700 text-slate-300 hover:border-green-500 hover:text-green-400 transition text-sm font-medium">
+                        Share to Farcaster
+                    </button>
+                </div>
+            </div>
+        </section>
 
-        document.getElementById('share-farcaster')?.addEventListener('click', () => {
-            console.log('[Index] Share to Farcaster triggered');
-            alert('Share functionality connects to social-share.js');
-        });
-    </script>
-    <script src="risk-core.js"></script>
-   <script src="exit-optimizer.js"></script>
-   <script src="nairobi-agent.js"></script>
-   <script src="audit-manager.js"></script>
-    
+        <!-- Features Preview -->
+        <section class="max-w-7xl mx-auto px-8 py-20">
+            <h2 class="text-2xl font-bold mb-12">Why YieldGuard AI</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
+                    <div class="w-10 h-10 bg-green-500/20 border border-green-500 rounded mb-4"></div>
+                    <h3 class="font-semibold mb-2">Real-Time Monitoring</h3>
+                    <p class="text-sm text-slate-400">Sub-second updates on APY, funding rates, and protocol health.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
+                    <div class="w-10 h-10 bg-yellow-500/20 border border-yellow-500 rounded mb-4"></div>
+                    <h3 class="font-semibold mb-2">Smart Exit Logic</h3>
+                    <p class="text-sm text-slate-400">Redemption vs. market value comparison for instant decisions.</p>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 feature-card">
+                    <div class="w-10 h-10 bg-blue-500/20 border border-blue-500 rounded mb-4"></div>
+                    <h3 class="font-semibold mb-2">Tax Compliance</h3>
+                    <p class="text-sm text-slate-400">One-click KES/USD cost-basis reports for KRA audits.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Footer -->
+        <section class="border-t border-slate-800 py-12">
+            <div class="max-w-7xl mx-auto px-8 text-center">
+                <p class="text-slate-400 mb-6">Join 1,000+ whales and hedge funds protecting their yield in 2026.</p>
+                <button id="cta-launch" class="neon-border px-8 py-3 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition cta-button">
+                    Start Monitoring
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/risk-core.js"></script>
+    <script src="js/exit-optimizer.js"></script>
+    <script src="js/nairobi-agent.js"></script>
+    <script src="js/audit-manager.js"></script>
+    <script src="js/index-init.js"></script>
+    <script src="js/global-sidebar.js"></script>
 </body>
 </html>

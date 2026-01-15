@@ -1,0 +1,147 @@
+/* ========================================
+   DISTRIBUTION & GROWTH UTILITY (Lead Magnet)
+   css/marketing-ui.css
+   Extracted from index.html
+   ======================================== */
+
+/* PulseTicker Animation */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.ticker-scroll {
+    animation: scroll 30s linear infinite;
+}
+
+.ticker-scroll:hover {
+    animation-play-state: paused;
+}
+
+/* Neon Border Effect */
+.neon-border {
+    border: 1px solid rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+/* Pulse Animation */
+.pulse-dot {
+    animation: pulse-animation 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-animation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Shareable Risk Card Styles */
+.risk-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+}
+
+.risk-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #22c55e;
+    margin-bottom: 12px;
+}
+
+.risk-card-score {
+    font-size: 48px;
+    font-weight: 700;
+    color: #22c55e;
+    line-height: 1;
+}
+
+.risk-card-label {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Hero Section Gradient */
+.hero-gradient {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+/* Feature Card Hover */
+.feature-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(15, 23, 42, 0.5);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+}
+
+/* CTA Button Glow */
+.cta-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(34, 197, 94, 0.1);
+    transition: left 0.3s ease;
+}
+
+.cta-button:hover::before {
+    left: 100%;
+}
+
+/* ========================================
+   TERMINAL SIDEBAR & LAYOUT
+   ======================================== */
+
+.sidebar-container {
+    background: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(16px);
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    color: rgb(148, 163, 184);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+    color: rgb(34, 197, 94);
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+.sidebar-item.active {
+    border-left: 3px solid rgb(34, 197, 94);
+    background-color: rgba(30, 41, 59, 0.8);
+}
+
+/* Neon Border Glow for Active State */
+.sidebar-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: rgb(34, 197, 94);
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
