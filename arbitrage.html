@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YieldGuard AI - Exit Optimizer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/risk-visuals.css">
     <link rel="stylesheet" href="css/exit-styles.css">
 </head>
 <body class="bg-slate-950 text-white">
@@ -42,12 +43,20 @@
         <!-- Settings -->
         <a href="#settings" class="sidebar-item nav-item" data-page="settings">
             <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
-                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
-            </a>
+            <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Settings</span>
+        </a>
+
+        <!-- Nairobi AI Assistant Button -->
+        <a href="#" id="trigger-nairobi" class="sidebar-item nav-item" title="Ask Nairobi (Ctrl+K)">
+            <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Nairobi AI</span>
+        </a>
     </aside>
 
     <!-- Main Content Area -->
-    <div class="ml-20 min-h-screen transition-all duration-300">
+    <main class="ml-20 min-h-screen transition-all duration-300">
         <!-- Header -->
         <nav class="sticky top-0 z-30 bg-slate-950/95 backdrop-blur border-b border-slate-800 px-8 py-4">
             <div class="flex justify-between items-center">
@@ -66,8 +75,8 @@
 
         <!-- Main Container -->
         <div class="max-w-7xl mx-auto px-8 py-8">
-            <!-- Input Section -->
-            <section class="mb-12">
+            <!-- Input Section (Full Width) -->
+            <section class="mb-8">
                 <div class="bg-slate-900 border border-slate-800 rounded-lg p-8">
                     <h2 class="text-lg font-semibold mb-6">Exit Calculator</h2>
                     
@@ -98,141 +107,193 @@
                 </div>
             </section>
 
-            <!-- Comparison View -->
-            <section class="mb-12">
-                <div class="comparison-container">
-                    <!-- Left: Safety Path (Redemption) -->
-                    <div class="comparison-card comparison-card-left">
-                        <div class="mb-8">
-                            <p class="text-sm text-slate-500 mb-2">Strategy</p>
-                            <h3 class="text-2xl font-bold">Redemption (Cooldown)</h3>
-                            <p class="text-xs text-slate-500 mt-2">The Safe Path: Wait for protocol unlock window</p>
+            <!-- Two-Column Grid: Comparison & Table -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Left Column: De-Peg Strategy Comparison -->
+                <section class="space-y-6">
+                    <h2 class="text-lg font-semibold px-0">De-Peg Strategy Comparison</h2>
+                    <div class="comparison-container space-y-4">
+                        <!-- Left: Safety Path (Redemption) -->
+                        <div class="comparison-card comparison-card-left bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl p-6">
+                            <div class="mb-8">
+                                <p class="text-sm text-slate-500 mb-2">Strategy</p>
+                                <h3 class="text-2xl font-bold">Redemption (Cooldown)</h3>
+                                <p class="text-xs text-slate-500 mt-2">The Safe Path: Wait for protocol unlock window</p>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="status-box status-box-safe">
+                                    <p class="text-xs text-slate-500 mb-3">Time Remaining</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <p class="text-5xl font-bold text-green-400 timer-display" data-redemption-days>7</p>
+                                        <p class="text-xl text-slate-400">days</p>
+                                    </div>
+                                    <p class="text-xs text-slate-600 mt-3">Unlock date: 2024-01-26 14:30 UTC</p>
+                                </div>
+
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-2">Net Asset Value (NAV)</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <p class="text-3xl font-bold" data-redemption-nav>$10,000</p>
+                                        <p class="text-sm text-green-400">100%</p>
+                                    </div>
+                                </div>
+
+                                <div class="status-box status-box-safe">
+                                    <p class="text-xs text-green-400 font-semibold mb-2">✓ Benefits</p>
+                                    <ul class="status-list text-slate-300">
+                                        <li>• Full redemption value</li>
+                                        <li>• No slippage or haircut</li>
+                                        <li>• Protocol-validated exit</li>
+                                    </ul>
+                                </div>
+
+                                <div class="status-box status-box-warning">
+                                    <p class="text-xs text-yellow-400 font-semibold mb-2">⚠ Risks</p>
+                                    <ul class="status-list text-slate-300">
+                                        <li>• 7-day lock-up period</li>
+                                        <li>• De-peg exposure (worst case 2%)</li>
+                                        <li>• Opportunity cost: 168 hours</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="space-y-6">
-                            <div class="status-box status-box-safe">
-                                <p class="text-xs text-slate-500 mb-3">Time Remaining</p>
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-5xl font-bold text-green-400 timer-display" data-redemption-days>7</p>
-                                    <p class="text-xl text-slate-400">days</p>
+                        <!-- Right: Market Path (DEX) -->
+                        <div class="comparison-card comparison-card-right bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl p-6">
+                            <div class="mb-8">
+                                <p class="text-sm text-slate-500 mb-2">Strategy</p>
+                                <h3 class="text-2xl font-bold">Instant Liquidity (DEX)</h3>
+                                <p class="text-xs text-slate-500 mt-2">The Fast Path: Exit immediately on Uniswap</p>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="status-box status-box-warning">
+                                    <p class="text-xs text-slate-500 mb-3">Execution Speed</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <p class="text-5xl font-bold text-orange-400 timer-display">2</p>
+                                        <p class="text-xl text-slate-400">minutes</p>
+                                    </div>
+                                    <p class="text-xs text-slate-600 mt-3">Est. time via Uniswap V4</p>
                                 </div>
-                                <p class="text-xs text-slate-600 mt-3">Unlock date: 2024-01-26 14:30 UTC</p>
-                            </div>
 
-                            <div>
-                                <p class="text-xs text-slate-500 mb-2">Net Asset Value (NAV)</p>
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-3xl font-bold" data-redemption-nav>$10,000</p>
-                                    <p class="text-sm text-green-400">100%</p>
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-2">Market Price (DEX Slippage)</p>
+                                    <div class="flex items-baseline justify-between">
+                                        <div>
+                                            <p class="text-3xl font-bold" data-market-price>$9,960</p>
+                                            <p class="text-xs text-slate-500 mt-1" data-market-haircut>0.4% haircut</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-sm text-red-400 font-semibold" data-market-loss>-$40</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="status-box status-box-safe">
-                                <p class="text-xs text-green-400 font-semibold mb-2">✓ Benefits</p>
-                                <ul class="status-list text-slate-300">
-                                    <li>• Full redemption value</li>
-                                    <li>• No slippage or haircut</li>
-                                    <li>• Protocol-validated exit</li>
-                                </ul>
-                            </div>
+                                <div class="status-box status-box-blue">
+                                    <p class="text-xs text-blue-400 font-semibold mb-2">✓ Benefits</p>
+                                    <ul class="status-list text-slate-300">
+                                        <li>• Instant capital access</li>
+                                        <li>• 168 hours of liquidity gain</li>
+                                        <li>• Eliminates de-peg risk (worst-case 2%)</li>
+                                    </ul>
+                                </div>
 
-                            <div class="status-box status-box-warning">
-                                <p class="text-xs text-yellow-400 font-semibold mb-2">⚠ Risks</p>
-                                <ul class="status-list text-slate-300">
-                                    <li>• 7-day lock-up period</li>
-                                    <li>• De-peg exposure (worst case 2%)</li>
-                                    <li>• Opportunity cost: 168 hours</li>
-                                </ul>
+                                <div class="status-box status-box-warning">
+                                    <p class="text-xs text-orange-400 font-semibold mb-2">⚠ Costs</p>
+                                    <ul class="status-list text-slate-300">
+                                        <li>• 0.4% DEX slippage (-$40)</li>
+                                        <li>• Gas fees (~$3-5)</li>
+                                        <li>• Foregoes final yield (~$2.40/day)</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <!-- Right: Market Path (DEX) -->
-                    <div class="comparison-card comparison-card-right">
-                        <div class="mb-8">
-                            <p class="text-sm text-slate-500 mb-2">Strategy</p>
-                            <h3 class="text-2xl font-bold">Instant Liquidity (DEX)</h3>
-                            <p class="text-xs text-slate-500 mt-2">The Fast Path: Exit immediately on Uniswap</p>
-                        </div>
-
-                        <div class="space-y-6">
-                            <div class="status-box status-box-warning">
-                                <p class="text-xs text-slate-500 mb-3">Execution Speed</p>
-                                <div class="flex items-baseline gap-2">
-                                    <p class="text-5xl font-bold text-orange-400 timer-display">2</p>
-                                    <p class="text-xl text-slate-400">minutes</p>
-                                </div>
-                                <p class="text-xs text-slate-600 mt-3">Est. time via Uniswap V4</p>
-                            </div>
-
-                            <div>
-                                <p class="text-xs text-slate-500 mb-2">Market Price (DEX Slippage)</p>
-                                <div class="flex items-baseline justify-between">
-                                    <div>
-                                        <p class="text-3xl font-bold" data-market-price>$9,960</p>
-                                        <p class="text-xs text-slate-500 mt-1" data-market-haircut>0.4% haircut</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-sm text-red-400 font-semibold" data-market-loss>-$40</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="status-box status-box-blue">
-                                <p class="text-xs text-blue-400 font-semibold mb-2">✓ Benefits</p>
-                                <ul class="status-list text-slate-300">
-                                    <li>• Instant capital access</li>
-                                    <li>• 168 hours of liquidity gain</li>
-                                    <li>• Eliminates de-peg risk (worst-case 2%)</li>
-                                </ul>
-                            </div>
-
-                            <div class="status-box status-box-warning">
-                                <p class="text-xs text-orange-400 font-semibold mb-2">⚠ Costs</p>
-                                <ul class="status-list text-slate-300">
-                                    <li>• 0.4% DEX slippage (-$40)</li>
-                                    <li>• Gas fees (~$3-5)</li>
-                                    <li>• Foregoes final yield (~$2.40/day)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Liquidity Gain Badge -->
-            <section class="mb-12">
-                <div id="liquidity-badge" class="liquidity-badge">
-                    <p class="text-sm text-slate-400 mb-3">Decision Metric</p>
-                    <h2 class="text-4xl font-bold mb-2">
-                        <span class="text-green-400">Gain:</span> <span data-liquidity-hours>168 Hours</span>
-                    </h2>
-                    <p class="text-lg text-slate-300 mb-6">Capital Efficiency by Exiting Early</p>
+                <!-- Right Column: Scenario Analysis Table & Liquidity Badge -->
+                <section class="space-y-6">
+                    <h2 class="text-lg font-semibold px-0">Scenario Analysis</h2>
                     
-                    <div class="liquidity-metric">
-                        <div>
-                            <p class="text-xs text-slate-500 mb-2">Cost of Waiting 7 Days</p>
-                            <p class="text-2xl font-bold text-red-400">$16.80</p>
-                            <p class="text-xs text-slate-500 mt-1">Forgone yield</p>
+                    <!-- Scenario Table -->
+                    <div class="bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="scenario-table w-full" data-scenario-table>
+                                <thead>
+                                    <tr>
+                                        <th>Scenario</th>
+                                        <th class="scenario-table-mono">Redemption Value</th>
+                                        <th class="scenario-table-mono">Market Value</th>
+                                        <th class="scenario-table-mono">Recommendation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Best Case (No De-peg)</td>
+                                        <td class="scenario-table-mono text-green-400">$10,000</td>
+                                        <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                        <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mid Case (0.5% De-peg)</td>
+                                        <td class="scenario-table-mono text-yellow-400">$9,950</td>
+                                        <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                        <td class="scenario-table-mono"><span class="text-yellow-400 font-semibold">NEUTRAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Worst Case (2% De-peg)</td>
+                                        <td class="scenario-table-mono text-red-400">$9,800</td>
+                                        <td class="scenario-table-mono text-orange-400">$9,957</td>
+                                        <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div>
-                            <p class="text-xs text-slate-500 mb-2">Cost of Exiting Now</p>
-                            <p class="text-2xl font-bold text-orange-400">$43</p>
-                            <p class="text-xs text-slate-500 mt-1">Slippage + gas fees</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-slate-500 mb-2">Net Recommendation</p>
-                            <p class="text-2xl font-bold text-green-400" data-recommendation>Exit Now</p>
-                            <p class="text-xs text-slate-500 mt-1">Saves $26.20 gross</p>
+                        <div class="px-6 py-4 bg-slate-800/30 border-t border-slate-700 text-xs text-slate-500">
+                            <p>Analysis assumes: 7-day cooldown window, current Uniswap V4 pricing, no further yield accrual. De-peg risk: 0.2% - 2.0%</p>
                         </div>
                     </div>
 
-                    <p class="text-xs text-slate-500 mt-8">*Analysis assumes no de-peg event. If Ethena de-pegs 2%, loss extends to $200+</p>
-                </div>
-            </section>
+                    <!-- Liquidity Gain Badge -->
+                    <div id="liquidity-badge" class="liquidity-badge bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl p-6">
+                        <p class="text-sm text-slate-400 mb-3">Decision Metric</p>
+                        <h3 class="text-2xl font-bold mb-2">
+                            <span class="text-green-400">Gain:</span> <span data-liquidity-hours>168 Hours</span>
+                        </h3>
+                        <p class="text-sm text-slate-300 mb-4">Capital Efficiency by Exiting Early</p>
+                        
+                        <div class="liquidity-metric space-y-3">
+                            <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Cost of Waiting 7 Days</p>
+                                    <p class="text-lg font-bold text-red-400">$16.80</p>
+                                </div>
+                                <p class="text-xs text-slate-500">Forgone yield</p>
+                            </div>
+                            <div class="flex justify-between items-center pb-3 border-b border-slate-700">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Cost of Exiting Now</p>
+                                    <p class="text-lg font-bold text-orange-400">$43</p>
+                                </div>
+                                <p class="text-xs text-slate-500">Slippage + gas</p>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-slate-500 mb-1">Net Recommendation</p>
+                                    <p class="text-lg font-bold text-green-400" data-recommendation>Exit Now</p>
+                                </div>
+                                <p class="text-xs text-slate-500">Saves $26.20</p>
+                            </div>
+                        </div>
 
-            <!-- Action Buttons -->
-            <section class="flex gap-4 justify-center mb-12 flex-wrap">
+                        <p class="text-xs text-slate-600 mt-4 pt-4 border-t border-slate-700">*Assumes no de-peg event. If Ethena de-pegs 2%, loss extends to $200+</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Action Buttons (Full Width) -->
+            <section class="mt-12 flex gap-4 justify-center flex-wrap">
                 <button id="execute-exit" class="btn-primary">
                     Execute Exit on Uniswap
                 </button>
@@ -241,63 +302,58 @@
                 </button>
             </section>
 
-            <!-- Detailed Analysis Table -->
-            <section class="mb-12">
-                <div class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-800">
-                        <h3 class="font-semibold">Scenario Analysis</h3>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="scenario-table" data-scenario-table>
-                            <thead>
-                                <tr>
-                                    <th>Scenario</th>
-                                    <th class="scenario-table-mono">Redemption Value</th>
-                                    <th class="scenario-table-mono">Market Value</th>
-                                    <th class="scenario-table-mono">Recommendation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Best Case (No De-peg)</td>
-                                    <td class="scenario-table-mono text-green-400">$10,000</td>
-                                    <td class="scenario-table-mono text-orange-400">$9,957</td>
-                                    <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Mid Case (0.5% De-peg)</td>
-                                    <td class="scenario-table-mono text-yellow-400">$9,950</td>
-                                    <td class="scenario-table-mono text-orange-400">$9,957</td>
-                                    <td class="scenario-table-mono"><span class="text-yellow-400 font-semibold">NEUTRAL</span></td>
-                                </tr>
-                                <tr>
-                                    <td>Worst Case (2% De-peg)</td>
-                                    <td class="scenario-table-mono text-red-400">$9,800</td>
-                                    <td class="scenario-table-mono text-orange-400">$9,957</td>
-                                    <td class="scenario-table-mono"><span class="text-green-400 font-semibold">EXIT NOW</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="px-6 py-4 bg-slate-800/50 text-xs text-slate-500">
-                        <p>Analysis assumes: 7-day cooldown window, current Uniswap V4 pricing, no further yield accrual. De-peg risk historical range: 0.2% - 2.0%</p>
-                    </div>
-                </div>
-            </section>
-
             <!-- Disclaimer Footer -->
-            <footer class="border-t border-slate-800 pt-8 pb-12">
+            <footer class="border-t border-slate-800 mt-12 pt-8 pb-12">
                 <p class="text-xs text-slate-500 text-center">
                     Data provided by <span class="text-slate-400 font-semibold">Nairobi Engine logic nodes</span>. Exit data refreshes every 30 seconds. 
                     <br>Not financial advice. Please verify all calculations before executing any trades.
                 </p>
             </footer>
         </div>
+    </main>
+
+    <!-- Nairobi Command Palette Modal (Global) -->
+    <div id="agent-panel" class="nairobi-modal fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm hidden p-4">
+        <div class="nairobi-command-palette w-full max-w-2xl bg-slate-900/90 border border-slate-700 rounded-xl shadow-2xl flex flex-col max-h-[80vh]">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                <h2 class="text-xl font-semibold">Nairobi AI Agent</h2>
+                <button id="close-agent" class="text-slate-400 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 scroll-smooth">
+                <div class="flex justify-start">
+                    <div class="bg-slate-800 rounded-lg px-4 py-2 max-w-xs">
+                        <p class="text-sm text-slate-300">Hi! I'm Nairobi. Ask me about your positions or safety metrics.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input -->
+            <div class="border-t border-slate-700 p-6">
+                <div class="flex gap-2">
+                    <input 
+                        id="agent-input" 
+                        type="text" 
+                        placeholder="Ask about your positions..." 
+                        class="flex-1 px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 transition"
+                        autofocus>
+                    <button id="send-message" class="px-4 py-3 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="js/risk-core.js"></script>
     <script src="js/exit-optimizer.js"></script>
-    <script src="js/arbitrage-init.js"></script>
+    <script src="js/nairobi-agent.js"></script>
+    <script src="js/nairobi-agent-global.js"></script>
     <script src="js/global-sidebar.js"></script>
+    <script src="js/arbitrage-init.js"></script>
 </body>
 </html>

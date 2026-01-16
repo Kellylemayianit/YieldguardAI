@@ -1,258 +1,489 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YieldGuard AI - Institutional Audit Logs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/audit-layout.css">
-</head>
-<body class="bg-slate-950 text-white">
-    <!-- Header -->
-    <nav class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="dashboard.html" class="text-slate-400 hover:text-white transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>YieldGuard AI - Institutional Audit Logs</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="css/audit-layout.css" />
+        <style>
+            html {
+                scroll-behavior: smooth;
+            }
+        </style>
+    </head>
+    <body class="bg-slate-950 text-white">
+        <!-- Global Fixed Sidebar -->
+        <aside
+            id="global-sidebar"
+            class="sidebar-container fixed left-0 top-0 h-screen w-20 bg-slate-900/80 backdrop-blur-md border-r border-slate-800 flex flex-col items-center py-8 transition-all duration-300 z-40 hover:w-64 group">
+            <!-- Logo/Home -->
+            <a
+                href="index.html"
+                class="flex items-center justify-center mb-8 group-hover:justify-start group-hover:px-4 transition-all">
+                <div
+                    class="w-10 h-10 bg-green-500/20 border border-green-500 rounded flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <span
+                    class="ml-4 font-bold text-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >YieldGuard</span
+                >
+            </a>
+
+            <!-- Navigation Items -->
+            <nav class="flex flex-col gap-4 flex-1">
+                <!-- Dashboard -->
+                <a href="dashboard.html" class="sidebar-item nav-item" data-page="dashboard">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span
+                        class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >Pulse Dashboard</span
+                    >
                 </a>
-                <div>
-                    <h1 class="text-xl font-bold">Institutional Audit Logs</h1>
-                    <p class="text-xs text-slate-500">KRA & Global Tax Compliance</p>
+
+                <!-- Arbitrage -->
+                <a href="arbitrage.html" class="sidebar-item nav-item" data-page="arbitrage">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span
+                        class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >Exit Optimizer</span
+                    >
+                </a>
+
+                <!-- Reports -->
+                <a href="reports.html" class="sidebar-item nav-item active" data-page="reports">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span
+                        class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >Audit Logs</span
+                    >
+                </a>
+            </nav>
+
+            <!-- Settings -->
+            <a href="#settings" class="sidebar-item nav-item" data-page="settings">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                </svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >Settings</span
+                >
+            </a>
+            <!-- Nairobi AI Assistant Button -->
+            <a href="#" id="trigger-nairobi" class="sidebar-item nav-item" title="Ask Nairobi (Ctrl+K)">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="ml-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    >Nairobi AI</span
+                >
+            </a>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="ml-20 min-h-screen transition-all duration-300">
+            <!-- Header -->
+            <nav class="sticky top-0 z-50 bg-slate-950/95 backdrop-blur border-b border-slate-800">
+                <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                    <div class="flex items-center gap-4">
+                        <a href="dashboard.html" class="text-slate-400 hover:text-white transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </a>
+                        <div>
+                            <h1 class="text-xl font-bold">Institutional Audit Logs</h1>
+                            <p class="text-xs text-slate-500">KRA & Global Tax Compliance</p>
+                        </div>
+                    </div>
+                    <button
+                        id="download-csv"
+                        class="neon-border px-6 py-2 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Download Tax CSV (KES/USD)
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Main Container -->
+            <div class="max-w-7xl mx-auto px-4 py-8">
+                <!-- Summary Cards -->
+                <section class="grid md:grid-cols-4 gap-4 mb-8">
+                    <div class="summary-card">
+                        <p class="summary-card-label">Total Rewards (Period)</p>
+                        <p class="summary-card-value text-green-400">2.547 ETH</p>
+                        <p class="text-xs text-slate-600 mt-2">≈ 1,257,843 KES</p>
+                    </div>
+                    <div class="summary-card">
+                        <p class="summary-card-label">Transaction Count</p>
+                        <p class="summary-card-value">47</p>
+                        <p class="text-xs text-slate-600 mt-2">Rewards logged</p>
+                    </div>
+                    <div class="summary-card">
+                        <p class="summary-card-label">Tax Liability (Est.)</p>
+                        <p class="summary-card-value text-orange-400">189,271 KES</p>
+                        <p class="text-xs text-slate-600 mt-2">30% of gross income</p>
+                    </div>
+                    <div class="summary-card">
+                        <p class="summary-card-label">Status</p>
+                        <p class="summary-card-value text-green-400">Audit Ready</p>
+                        <p class="text-xs text-slate-600 mt-2">All data verified</p>
+                    </div>
+                </section>
+
+                <!-- Filters -->
+                <section class="mb-8">
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <span class="text-sm text-slate-500">Filter by:</span>
+                        <button
+                            class="filter-btn active px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition"
+                            data-filter="all">
+                            All Time
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition"
+                            data-filter="current-month">
+                            Current Month
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition"
+                            data-filter="last-quarter">
+                            Last Quarter
+                        </button>
+                        <button
+                            class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition"
+                            data-filter="last-year">
+                            Last Year
+                        </button>
+
+                        <div class="ml-auto flex gap-2">
+                            <select
+                                id="protocol-filter"
+                                class="px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-white focus:border-green-500 focus:outline-none transition">
+                                <option value="">All Protocols</option>
+                                <option value="ethena">Ethena</option>
+                                <option value="falcon">Falcon</option>
+                                <option value="pendle">Pendle</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Table -->
+                <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="audit-table table-mono dense-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Asset</th>
+                                    <th>Protocol</th>
+                                    <th class="table-cell-number">Reward (Crypto)</th>
+                                    <th class="table-cell-number">Value at Receipt</th>
+                                    <th class="table-cell-number">Exchange Rate</th>
+                                    <th class="table-cell-number">Risk Score</th>
+                                    <th style="text-align: center">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Row 1 -->
+                                <tr>
+                                    <td>2024-01-19 14:30</td>
+                                    <td>ETH</td>
+                                    <td>
+                                        <span class="protocol-badge protocol-badge-ethena">Ethena</span>
+                                    </td>
+                                    <td class="table-cell-number text-green-400 font-semibold">0.0847</td>
+                                    <td class="table-cell-number text-slate-300">41,878 KES</td>
+                                    <td class="table-cell-number text-slate-400 text-xs">494.7 KES/ETH</td>
+                                    <td class="table-cell-number text-green-400 font-semibold">78</td>
+                                    <td style="text-align: center">
+                                        <button class="icon-button" title="View details">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 2 -->
+                                <tr>
+                                    <td>2024-01-18 11:15</td>
+                                    <td>USDe</td>
+                                    <td>
+                                        <span class="protocol-badge protocol-badge-ethena">Ethena</span>
+                                    </td>
+                                    <td class="table-cell-number text-green-400 font-semibold">1,245.67</td>
+                                    <td class="table-cell-number text-slate-300">1,248,910 KES</td>
+                                    <td class="table-cell-number text-slate-400 text-xs">1,002.6 KES/USD</td>
+                                    <td class="table-cell-number text-green-400 font-semibold">72</td>
+                                    <td style="text-align: center">
+                                        <button class="icon-button" title="View details">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 3 -->
+                                <tr>
+                                    <td>2024-01-17 09:42</td>
+                                    <td>PT-Token</td>
+                                    <td>
+                                        <span class="protocol-badge protocol-badge-pendle">Pendle</span>
+                                    </td>
+                                    <td class="table-cell-number text-green-400 font-semibold">2.891</td>
+                                    <td class="table-cell-number text-slate-300">3,850 KES</td>
+                                    <td class="table-cell-number text-slate-400 text-xs">1,331.2 KES/PT</td>
+                                    <td class="table-cell-number text-yellow-400 font-semibold">65</td>
+                                    <td style="text-align: center">
+                                        <button class="icon-button" title="View details">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 4 -->
+                                <tr>
+                                    <td>2024-01-16 16:22</td>
+                                    <td>sUSDe</td>
+                                    <td>
+                                        <span class="protocol-badge protocol-badge-ethena">Ethena</span>
+                                    </td>
+                                    <td class="table-cell-number text-green-400 font-semibold">847.92</td>
+                                    <td class="table-cell-number text-slate-300">851,234 KES</td>
+                                    <td class="table-cell-number text-slate-400 text-xs">1,003.9 KES/USD</td>
+                                    <td class="table-cell-number text-green-400 font-semibold">81</td>
+                                    <td style="text-align: center">
+                                        <button class="icon-button" title="View details">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- Row 5 -->
+                                <tr>
+                                    <td>2024-01-15 13:08</td>
+                                    <td>ETH</td>
+                                    <td>
+                                        <span class="protocol-badge protocol-badge-falcon">Falcon</span>
+                                    </td>
+                                    <td class="table-cell-number text-green-400 font-semibold">0.1203</td>
+                                    <td class="table-cell-number text-slate-300">59,482 KES</td>
+                                    <td class="table-cell-number text-slate-400 text-xs">494.5 KES/ETH</td>
+                                    <td class="table-cell-number text-yellow-400 font-semibold">62</td>
+                                    <td style="text-align: center">
+                                        <button class="icon-button" title="View details">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path>
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Table Footer -->
+                    <div class="table-footer">
+                        <div class="text-xs text-slate-500">
+                            Showing <span class="font-semibold text-slate-300" data-record-count>5</span> of 47
+                            transactions
+                        </div>
+                        <button class="text-sm text-green-400 hover:text-green-300 transition font-semibold">
+                            Load More
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Compliance Notes -->
+                <section class="mt-12 grid md:grid-cols-2 gap-8">
+                    <div class="compliance-section compliance-section-kra">
+                        <h3 class="font-semibold mb-4">KRA Compliance</h3>
+                        <ul class="compliance-list">
+                            <li>✓ All rewards logged at time of receipt</li>
+                            <li>✓ Exchange rates sourced from Binance API</li>
+                            <li>✓ Cost-basis calculations ready for KRA submission</li>
+                            <li>✓ Tax liability: ~189,271 KES (30% effective rate)</li>
+                        </ul>
+                    </div>
+
+                    <div class="compliance-section compliance-section-global">
+                        <h3 class="font-semibold mb-4">Global Tax Ready</h3>
+                        <ul class="compliance-list">
+                            <li>✓ USD-denominated exports available</li>
+                            <li>✓ Compatible with TaxBit / Koinly imports</li>
+                            <li>✓ Daily cost-basis snapshots for accuracy</li>
+                            <li>✓ Timestamps in UTC for audit trails</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Export Options -->
+                <section class="mt-12 bg-slate-900 border border-slate-800 rounded-lg p-8">
+                    <h3 class="font-semibold mb-6">Export Formats</h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <button class="export-option">
+                            <p class="export-option-title">CSV (KES)</p>
+                            <p class="export-option-desc">For KRA submission</p>
+                        </button>
+                        <button class="export-option">
+                            <p class="export-option-title">CSV (USD)</p>
+                            <p class="export-option-desc">For global tax software</p>
+                        </button>
+                        <button class="export-option">
+                            <p class="export-option-title">JSON Report</p>
+                            <p class="export-option-desc">For automated processing</p>
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Footer -->
+            <footer class="border-t border-slate-800 mt-20 py-8">
+                <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+                    <p>
+                        This report is for informational purposes. Consult a tax professional before filing. Data
+                        accuracy verified via n8n audit trail.
+                    </p>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Nairobi Command Palette Modal (Global) -->
+        <div
+            id="agent-panel"
+            class="nairobi-modal fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm hidden p-4">
+            <div
+                class="nairobi-command-palette w-full max-w-2xl bg-slate-900/90 border border-slate-700 rounded-xl shadow-2xl flex flex-col max-h-[80vh]">
+                <!-- Header -->
+                <div class="flex items-center justify-between p-6 border-b border-slate-700">
+                    <h2 class="text-xl font-semibold">Nairobi AI Agent</h2>
+                    <button id="close-agent" class="text-slate-400 hover:text-white transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Chat Messages -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 scroll-smooth">
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 rounded-lg px-4 py-2 max-w-xs">
+                            <p class="text-sm text-slate-300">
+                                Hi! I'm Nairobi. Ask me about your positions or safety metrics.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input -->
+                <div class="border-t border-slate-700 p-6">
+                    <div class="flex gap-2">
+                        <input
+                            id="agent-input"
+                            type="text"
+                            placeholder="Ask about your positions..."
+                            class="flex-1 px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-green-500/30 transition"
+                            autofocus />
+                        <button
+                            id="send-message"
+                            class="px-4 py-3 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <button id="download-csv" class="neon-border px-6 py-2 rounded-lg font-semibold text-green-400 hover:bg-green-500/10 transition flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                Download Tax CSV (KES/USD)
-            </button>
         </div>
-    </nav>
 
-    <!-- Main Container -->
-    <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Summary Cards -->
-        <section class="grid md:grid-cols-4 gap-4 mb-8">
-            <div class="summary-card">
-                <p class="summary-card-label">Total Rewards (Period)</p>
-                <p class="summary-card-value text-green-400">2.547 ETH</p>
-                <p class="text-xs text-slate-600 mt-2">≈ 1,257,843 KES</p>
-            </div>
-            <div class="summary-card">
-                <p class="summary-card-label">Transaction Count</p>
-                <p class="summary-card-value">47</p>
-                <p class="text-xs text-slate-600 mt-2">Rewards logged</p>
-            </div>
-            <div class="summary-card">
-                <p class="summary-card-label">Tax Liability (Est.)</p>
-                <p class="summary-card-value text-orange-400">189,271 KES</p>
-                <p class="text-xs text-slate-600 mt-2">30% of gross income</p>
-            </div>
-            <div class="summary-card">
-                <p class="summary-card-label">Status</p>
-                <p class="summary-card-value text-green-400">Audit Ready</p>
-                <p class="text-xs text-slate-600 mt-2">All data verified</p>
-            </div>
-        </section>
+        <!-- Global Risk & Yield Engine -->
+        <script src="js/risk-core.js"></script>
 
-        <!-- Filters -->
-        <section class="mb-8">
-            <div class="flex flex-wrap gap-3 items-center">
-                <span class="text-sm text-slate-500">Filter by:</span>
-                <button class="filter-btn active px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition" data-filter="all">
-                    All Time
-                </button>
-                <button class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition" data-filter="current-month">
-                    Current Month
-                </button>
-                <button class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition" data-filter="last-quarter">
-                    Last Quarter
-                </button>
-                <button class="filter-btn px-4 py-2 rounded-lg border border-slate-700 text-sm hover:border-slate-600 transition" data-filter="last-year">
-                    Last Year
-                </button>
+        <!-- Global Nairobi Agent -->
+        <script src="js/nairobi-agent.js"></script>
+        <script src="js/nairobi-agent-global.js"></script>
 
-                <div class="ml-auto flex gap-2">
-                    <select id="protocol-filter" class="px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-sm text-white focus:border-green-500 focus:outline-none transition">
-                        <option value="">All Protocols</option>
-                        <option value="ethena">Ethena</option>
-                        <option value="falcon">Falcon</option>
-                        <option value="pendle">Pendle</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <!-- Data Table -->
-        <section class="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="audit-table table-mono dense-table">
-                    <thead>
-                        <tr>
-                            <th>Timestamp</th>
-                            <th>Asset</th>
-                            <th>Protocol</th>
-                            <th class="table-cell-number">Reward (Crypto)</th>
-                            <th class="table-cell-number">Value at Receipt</th>
-                            <th class="table-cell-number">Exchange Rate</th>
-                            <th class="table-cell-number">Risk Score</th>
-                            <th style="text-align: center;">Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Row 1 -->
-                        <tr>
-                            <td>2024-01-19 14:30</td>
-                            <td>ETH</td>
-                            <td>
-                                <span class="protocol-badge protocol-badge-ethena">Ethena</span>
-                            </td>
-                            <td class="table-cell-number text-green-400 font-semibold">0.0847</td>
-                            <td class="table-cell-number text-slate-300">41,878 KES</td>
-                            <td class="table-cell-number text-slate-400 text-xs">494.7 KES/ETH</td>
-                            <td class="table-cell-number text-green-400 font-semibold">78</td>
-                            <td style="text-align: center;">
-                                <button class="icon-button" title="View details">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr>
-                            <td>2024-01-18 11:15</td>
-                            <td>USDe</td>
-                            <td>
-                                <span class="protocol-badge protocol-badge-ethena">Ethena</span>
-                            </td>
-                            <td class="table-cell-number text-green-400 font-semibold">1,245.67</td>
-                            <td class="table-cell-number text-slate-300">1,248,910 KES</td>
-                            <td class="table-cell-number text-slate-400 text-xs">1,002.6 KES/USD</td>
-                            <td class="table-cell-number text-green-400 font-semibold">72</td>
-                            <td style="text-align: center;">
-                                <button class="icon-button" title="View details">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr>
-                            <td>2024-01-17 09:42</td>
-                            <td>PT-Token</td>
-                            <td>
-                                <span class="protocol-badge protocol-badge-pendle">Pendle</span>
-                            </td>
-                            <td class="table-cell-number text-green-400 font-semibold">2.891</td>
-                            <td class="table-cell-number text-slate-300">3,850 KES</td>
-                            <td class="table-cell-number text-slate-400 text-xs">1,331.2 KES/PT</td>
-                            <td class="table-cell-number text-yellow-400 font-semibold">65</td>
-                            <td style="text-align: center;">
-                                <button class="icon-button" title="View details">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 4 -->
-                        <tr>
-                            <td>2024-01-16 16:22</td>
-                            <td>sUSDe</td>
-                            <td>
-                                <span class="protocol-badge protocol-badge-ethena">Ethena</span>
-                            </td>
-                            <td class="table-cell-number text-green-400 font-semibold">847.92</td>
-                            <td class="table-cell-number text-slate-300">851,234 KES</td>
-                            <td class="table-cell-number text-slate-400 text-xs">1,003.9 KES/USD</td>
-                            <td class="table-cell-number text-green-400 font-semibold">81</td>
-                            <td style="text-align: center;">
-                                <button class="icon-button" title="View details">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- Row 5 -->
-                        <tr>
-                            <td>2024-01-15 13:08</td>
-                            <td>ETH</td>
-                            <td>
-                                <span class="protocol-badge protocol-badge-falcon">Falcon</span>
-                            </td>
-                            <td class="table-cell-number text-green-400 font-semibold">0.1203</td>
-                            <td class="table-cell-number text-slate-300">59,482 KES</td>
-                            <td class="table-cell-number text-slate-400 text-xs">494.5 KES/ETH</td>
-                            <td class="table-cell-number text-yellow-400 font-semibold">62</td>
-                            <td style="text-align: center;">
-                                <button class="icon-button" title="View details">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2m0 0V3a2 2 0 00-2-2h-2a2 2 0 00-2 2v2z"></path></svg>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Table Footer -->
-            <div class="table-footer">
-                <div class="text-xs text-slate-500">
-                    Showing <span class="font-semibold text-slate-300" data-record-count>5</span> of 47 transactions
-                </div>
-                <button class="text-sm text-green-400 hover:text-green-300 transition font-semibold">
-                    Load More
-                </button>
-            </div>
-        </section>
-
-        <!-- Compliance Notes -->
-        <section class="mt-12 grid md:grid-cols-2 gap-8">
-            <div class="compliance-section compliance-section-kra">
-                <h3 class="font-semibold mb-4">KRA Compliance</h3>
-                <ul class="compliance-list">
-                    <li>✓ All rewards logged at time of receipt</li>
-                    <li>✓ Exchange rates sourced from Binance API</li>
-                    <li>✓ Cost-basis calculations ready for KRA submission</li>
-                    <li>✓ Tax liability: ~189,271 KES (30% effective rate)</li>
-                </ul>
-            </div>
-
-            <div class="compliance-section compliance-section-global">
-                <h3 class="font-semibold mb-4">Global Tax Ready</h3>
-                <ul class="compliance-list">
-                    <li>✓ USD-denominated exports available</li>
-                    <li>✓ Compatible with TaxBit / Koinly imports</li>
-                    <li>✓ Daily cost-basis snapshots for accuracy</li>
-                    <li>✓ Timestamps in UTC for audit trails</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- Export Options -->
-        <section class="mt-12 bg-slate-900 border border-slate-800 rounded-lg p-8">
-            <h3 class="font-semibold mb-6">Export Formats</h3>
-            <div class="grid md:grid-cols-3 gap-4">
-                <button class="export-option">
-                    <p class="export-option-title">CSV (KES)</p>
-                    <p class="export-option-desc">For KRA submission</p>
-                </button>
-                <button class="export-option">
-                    <p class="export-option-title">CSV (USD)</p>
-                    <p class="export-option-desc">For global tax software</p>
-                </button>
-                <button class="export-option">
-                    <p class="export-option-title">JSON Report</p>
-                    <p class="export-option-desc">For automated processing</p>
-                </button>
-            </div>
-        </section>
-    </div>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 mt-20 py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
-            <p>This report is for informational purposes. Consult a tax professional before filing. Data accuracy verified via n8n audit trail.</p>
-        </div>
-    </footer>
-
-    <script src="js/audit-manager.js"></script>
-    <script src="js/reports-init.js"></script>
-</body>
+        <!-- Page-Specific Initialization -->
+        <script src="js/global-sidebar.js"></script>
+        <script src="js/reports-init.js"></script>
+        <!-- OR dashboard-init.js, arbitrage-init.js, reports-init.js -->
+    </body>
 </html>
